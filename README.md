@@ -42,7 +42,7 @@ VERSION:
 COMMANDS:
      init, i    Initialize a LevelDB
      walk, w    Walk in a LevelDB
-     keys, k    Serach all keys in a LevelDB
+     keys, k    Search all keys in a LevelDB
      put, p     Put a value into a LevelDB
      get, g     Gut a value from a LevelDB
      delete, d  Delete a value from a LevelDB
