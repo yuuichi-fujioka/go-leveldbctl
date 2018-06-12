@@ -49,7 +49,7 @@ func main() {
 		{
 			Name:    "keys",
 			Aliases: []string{"k"},
-			Usage:   "Serach all keys in a LevelDB",
+			Usage:   "Search all keys in a LevelDB",
 			Action: func(c *cli.Context) error {
 				err := leveldbctl.Walk(c.GlobalString("dbdir"), func(k, _ string) {
 					fmt.Printf("%s\n", k)
