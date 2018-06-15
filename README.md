@@ -1,6 +1,7 @@
 # leveldbctl
 
 [![Build Status](https://travis-ci.org/yuuichi-fujioka/go-leveldbctl.svg?branch=master)](https://travis-ci.org/yuuichi-fujioka/go-leveldbctl)
+[![Coverage Status](https://coveralls.io/repos/github/yuuichi-fujioka/go-leveldbctl/badge.svg?branch=master)](https://coveralls.io/github/yuuichi-fujioka/go-leveldbctl?branch=master)
 
 LevelDB control command.
 
