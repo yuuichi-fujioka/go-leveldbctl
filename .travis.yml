@@ -8,6 +8,8 @@ go:
 
 before_install:
     - go get github.com/mattn/goveralls
+    - go get github.com/golangci/golangci-lint/cmd/golangci-lint
+
 script:
     - $GOPATH/bin/goveralls -service=travis-ci
     - make test
