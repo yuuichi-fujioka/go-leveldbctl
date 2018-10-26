@@ -102,12 +102,11 @@ func main() {
 				if err != nil {
 					return err
 				}
-				if ok {
-					fmt.Println(value)
-				} else {
-					fmt.Printf("%s is not found.\n", key)
+				if !ok {
+					return cli.NewExitError(fmt.Sprintf("%s is not found.\n", key), 1)
 				}
 
+				fmt.Println(value)
 				return nil
 			},
 		},
