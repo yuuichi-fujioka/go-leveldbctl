@@ -1,15 +1,20 @@
 language: go
 
-go:
-  - "1.11.x"
-  - master
-
-before_install:
+jobs:
+  include:
+  - name: UT and Coverage
+    stage: test
+    script:
     - go get github.com/mattn/goveralls
-    - go get github.com/golangci/golangci-lint/cmd/golangci-lint
-
-script:
     - export GO111MODULE=on
-    - go mod vendor # goberalls doesn't support go mod yet
-    - $GOPATH/bin/goveralls -service=travis-ci
     - make test
+    - goveralls -coverprofile=coverage.out -service=travis-ci
+    go: "1.11.x"
+  - name: Lint
+    stage: test
+    script:
+    - go get github.com/golangci/golangci-lint/cmd/golangci-lint
+    - export GO111MODULE=on
+    - go mod download
+    - make lint
+    go: "1.11.x"
