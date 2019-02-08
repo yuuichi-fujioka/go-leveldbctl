@@ -1,9 +1,7 @@
 language: go
 
 go:
-  - "1.x"
-  - "1.9"
-  - "1.10.x"
+  - "1.11.x"
   - master
 
 before_install:
@@ -11,5 +9,7 @@ before_install:
     - go get github.com/golangci/golangci-lint/cmd/golangci-lint
 
 script:
+    - export GO111MODULE=on
+    - go mod vendor # goberalls doesn't support go mod yet
     - $GOPATH/bin/goveralls -service=travis-ci
     - make test
