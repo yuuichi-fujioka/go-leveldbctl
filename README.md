@@ -25,7 +25,10 @@ bar
 
 ## Install
 
-`$ go get github.com/yuuichi-fujioka/go-leveldbctl/cmd/leveldbctl`
+```
+$ export GO111MODULE=on
+$ go get github.com/yuuichi-fujioka/go-leveldbctl/cmd/leveldbctl
+```
 
 ## Usage
 
