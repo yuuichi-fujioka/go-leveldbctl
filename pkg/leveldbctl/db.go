@@ -27,7 +27,7 @@ func Init(dbpath string) error {
 	return nil
 }
 
-func Put(dbpath, key, value string) error {
+func Put(dbpath string, key []byte, value []byte) error {
 	if !dbexists(dbpath) {
 		return fmt.Errorf("%s is not leveldb", dbpath)
 	}
@@ -38,11 +38,11 @@ func Put(dbpath, key, value string) error {
 	}
 	defer db.Close()
 
-	err = db.Put([]byte(key), []byte(value), nil)
+	err = db.Put(key, value, nil)
 	return err
 }
 
-func Get(dbpath, key string) (string, bool, error) {
+func Get(dbpath string, key []byte) (string, bool, error) {
 	if !dbexists(dbpath) {
 		return "", false, fmt.Errorf("%s is not leveldb", dbpath)
 	}
@@ -53,7 +53,7 @@ func Get(dbpath, key string) (string, bool, error) {
 	}
 	defer db.Close()
 
-	has, err := db.Has([]byte(key), nil)
+	has, err := db.Has(key, nil)
 	if err != nil {
 		return "", false, fmt.Errorf("cannot open leveldb")
 	}
@@ -61,14 +61,14 @@ func Get(dbpath, key string) (string, bool, error) {
 		return "", false, nil
 	}
 
-	value, err := db.Get([]byte(key), nil)
+	value, err := db.Get(key, nil)
 	if err != nil {
 		return "", true, fmt.Errorf("cannot get value")
 	}
 	return string(value), true, nil
 }
 
-func Delete(dbpath, key string) error {
+func Delete(dbpath string, key []byte) error {
 	if !dbexists(dbpath) {
 		return fmt.Errorf("%s is not leveldb", dbpath)
 	}
@@ -79,7 +79,7 @@ func Delete(dbpath, key string) error {
 	}
 	defer db.Close()
 
-	err = db.Delete([]byte(key), nil)
+	err = db.Delete(key, nil)
 	return err
 }
 

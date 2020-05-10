@@ -1,12 +1,25 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/urfave/cli"
 	"github.com/yuuichi-fujioka/go-leveldbctl/pkg/leveldbctl"
 )
+
+func kvfmt(ishex bool, kvarg string) []byte {
+	if !ishex {
+		return []byte(kvarg)
+	}
+	kv, err := hex.DecodeString(kvarg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return kv
+}
 
 func main() {
 	app := cli.NewApp()
@@ -18,6 +31,14 @@ func main() {
 			Value:  "./",
 			Usage:  "LevelDB Directory",
 			EnvVar: "LEVELDB_DIR",
+		},
+		cli.BoolFlag{
+			Name:  "hexkey, xk",
+			Usage: "get / put hexadecimal keys",
+		},
+		cli.BoolFlag{
+			Name:  "hexvalue, xv",
+			Usage: "get / put hexadecimal values",
 		},
 	}
 
@@ -72,8 +93,8 @@ func main() {
 					}
 					return cli.ShowSubcommandHelp(c)
 				}
-				key := c.Args()[0]
-				value := c.Args()[1]
+				key := kvfmt(c.GlobalBool("xk"), c.Args()[0])
+				value := kvfmt(c.GlobalBool("xv"), c.Args()[1])
 				err := leveldbctl.Put(c.GlobalString("dbdir"), key, value)
 				if err != nil {
 					return err
@@ -97,13 +118,13 @@ func main() {
 					}
 					return cli.ShowSubcommandHelp(c)
 				}
-				key := c.Args()[0]
+				key := kvfmt(c.GlobalBool("xk"), c.Args()[0])
 				value, ok, err := leveldbctl.Get(c.GlobalString("dbdir"), key)
 				if err != nil {
 					return err
 				}
 				if !ok {
-					return cli.NewExitError(fmt.Sprintf("%s is not found.\n", key), 1)
+					return cli.NewExitError(fmt.Sprintf("%v is not found.\n", key), 1)
 				}
 
 				fmt.Println(value)
@@ -125,7 +146,7 @@ func main() {
 					}
 					return cli.ShowSubcommandHelp(c)
 				}
-				key := c.Args()[0]
+				key := kvfmt(c.GlobalBool("xk"), c.Args()[0])
 				err := leveldbctl.Delete(c.GlobalString("dbdir"), key)
 				if err != nil {
 					return err
