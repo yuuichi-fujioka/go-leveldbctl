@@ -1,5 +1,7 @@
 module github.com/yuuichi-fujioka/go-leveldbctl
 
+go 1.14
+
 require (
 	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
 	github.com/onsi/ginkgo v1.7.0 // indirect
