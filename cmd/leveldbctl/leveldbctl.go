@@ -10,15 +10,15 @@ import (
 	"github.com/yuuichi-fujioka/go-leveldbctl/pkg/leveldbctl"
 )
 
-func kvfmt(ishex bool, kvarg string) []byte {
+func kvfmt(ishex bool, kvarg string) ([]byte, string) {
 	if !ishex {
-		return []byte(kvarg)
+		return []byte(kvarg), "%s"
 	}
 	kv, err := hex.DecodeString(kvarg)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return kv
+	return kv, "%x"
 }
 
 func main() {
@@ -93,13 +93,14 @@ func main() {
 					}
 					return cli.ShowSubcommandHelp(c)
 				}
-				key := kvfmt(c.GlobalBool("xk"), c.Args()[0])
-				value := kvfmt(c.GlobalBool("xv"), c.Args()[1])
+				key, kfmt := kvfmt(c.GlobalBool("xk"), c.Args()[0])
+				value, vfmt := kvfmt(c.GlobalBool("xv"), c.Args()[1])
 				err := leveldbctl.Put(c.GlobalString("dbdir"), key, value)
 				if err != nil {
 					return err
 				}
-				fmt.Printf("put %s: %s into %s.\n", key, value, c.GlobalString("dbdir"))
+				fmtstr := fmt.Sprintf("put %s: %s into %s.\n", kfmt, vfmt, "%s")
+				fmt.Printf(fmtstr, key, value, c.GlobalString("dbdir"))
 				return nil
 			},
 		},
@@ -118,7 +119,7 @@ func main() {
 					}
 					return cli.ShowSubcommandHelp(c)
 				}
-				key := kvfmt(c.GlobalBool("xk"), c.Args()[0])
+				key, _ := kvfmt(c.GlobalBool("xk"), c.Args()[0])
 				value, ok, err := leveldbctl.Get(c.GlobalString("dbdir"), key)
 				if err != nil {
 					return err
@@ -146,12 +147,13 @@ func main() {
 					}
 					return cli.ShowSubcommandHelp(c)
 				}
-				key := kvfmt(c.GlobalBool("xk"), c.Args()[0])
+				key, kfmt := kvfmt(c.GlobalBool("xk"), c.Args()[0])
 				err := leveldbctl.Delete(c.GlobalString("dbdir"), key)
 				if err != nil {
 					return err
 				}
-				fmt.Printf("%s is deleted\n", key)
+				fmtstr := fmt.Sprintf("%s is deleted\n", kfmt)
+				fmt.Printf(fmtstr, key)
 				return nil
 			},
 		},
