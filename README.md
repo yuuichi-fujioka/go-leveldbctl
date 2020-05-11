@@ -7,7 +7,7 @@ LevelDB control command.
 
 This command provides easy way to CRUD operation on LevelDB.
 
-```
+```sh
 $ leveldbctl put foo bar
 put foo: bar into ./.
 $ leveldbctl get foo
@@ -25,15 +25,14 @@ bar
 
 ## Install
 
-```
+```sh
 $ export GO111MODULE=on
 $ go get github.com/yuuichi-fujioka/go-leveldbctl/cmd/leveldbctl
 ```
 
 ## Usage
 
-```
-$ leveldbctl -h
+```sh
 NAME:
    leveldbctl - A new cli application
 
@@ -54,7 +53,20 @@ COMMANDS:
 
 GLOBAL OPTIONS:
    --dbdir value, -d value  LevelDB Directory (default: "./") [$LEVELDB_DIR]
+   --hexkey, --xk           get / put hexadecimal keys
+   --hexvalue, --xv         get / put hexadecimal values
    --help, -h               show help
    --version, -v            print the version
+```
+
+For hexadecimal keys and values:
+
+```sh
+$ export LEVELDB_DIR=${HOME}/.bitcoin/index
+$ leveldbctl -xk g 62f2a1f90489f1f74e441f325ec6f532df8286847d7c7a14000000000000000000|xxd -p
+89fe04a3db1d801d92188d350880fec55300008020edd4d15faba7c63dd7
+c83961bf6783a691fb8f5f6887120000000000000000009f413c1df7e296
+4af9babb54e46d4414eaad550b27b409e29ab80a832ac64ce9966ab95ddf
+8e1417baf3db320a
 ```
 

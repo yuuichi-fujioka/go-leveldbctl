@@ -1,6 +1,7 @@
 package leveldbctl
 
 import (
+	"bytes"
 	"io/ioutil"
 	"os"
 	"path"
@@ -45,9 +46,9 @@ func TestCRUD(t *testing.T) {
 	}
 
 	// const
-	v := "Foo"
-	k := "asdf"
-	k2 := "asdf2"
+	v := []byte("Foo")
+	k := []byte("asdf")
+	k2 := []byte("asdf2")
 
 	// get from blank db
 	value, ok, err := Get(dbdir, k)
@@ -75,7 +76,7 @@ func TestCRUD(t *testing.T) {
 	if !ok {
 		t.Errorf("Key{%s} must be exist.", k)
 	}
-	if value != v {
+	if !bytes.Equal(v, []byte(value)) {
 		t.Errorf("value should be %s but that is %s.", v, value)
 	}
 
@@ -134,7 +135,7 @@ func TestWalk(t *testing.T) {
 
 	// set value
 	for k, v := range keyvalue {
-		err := Put(dbdir, k, v)
+		err := Put(dbdir, []byte(k), []byte(v))
 		if err != nil {
 			t.Error(err)
 		}
@@ -165,17 +166,17 @@ func TestCheckingExistenceDB(t *testing.T) {
 	dbdir := path.Join(tmpdir, "existence")
 
 	// Uninitialized Get, Delete, Put, Walk
-	err = Put(dbdir, "k", "v")
+	err = Put(dbdir, []byte("k"), []byte("v"))
 	if err == nil {
 		t.Error("Put not check whether db is initialized")
 	}
 
-	err = Delete(dbdir, "k")
+	err = Delete(dbdir, []byte("k"))
 	if err == nil {
 		t.Error("Delete not check whether db is initialized")
 	}
 
-	value, ok, err := Get(dbdir, "k")
+	value, ok, err := Get(dbdir, []byte("k"))
 	if err == nil {
 		t.Error("Get not check whether db is initialized")
 	}
