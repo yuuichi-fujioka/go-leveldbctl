@@ -122,16 +122,12 @@ func Search(dbpath string, key []byte) (string, bool, error) {
 	}
 	defer db.Close()
 
-	iter := db.NewIterator(util.BytesPrefix(key), nil)
-
 	out := ""
+	iter := db.NewIterator(util.BytesPrefix(key), nil)
 	for iter.Next() {
 		out = out + string(iter.Key()) + ": " + string(iter.Value()) + "\n"
 	}
 	iter.Release()
-	if err != nil {
-		return "", false, fmt.Errorf("can't marshal data")
-	}
 
 	return string(out), true, iter.Error()
 }
