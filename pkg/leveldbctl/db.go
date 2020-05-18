@@ -6,6 +6,7 @@ import (
 	"path"
 
 	leveldb "github.com/syndtr/goleveldb/leveldb"
+	util "github.com/syndtr/goleveldb/leveldb/util"
 )
 
 func dbexists(dbpath string) bool {
@@ -108,4 +109,29 @@ func Walk(dbpath string, f func(string, string)) error {
 	}
 
 	return nil
+}
+
+func Search(dbpath string, key []byte) (string, bool, error) {
+	if !dbexists(dbpath) {
+		return "", false, fmt.Errorf("%s is not leveldb", dbpath)
+	}
+
+	db, err := leveldb.OpenFile(dbpath, nil)
+	if err != nil {
+		return "", false, fmt.Errorf("cannot open leveldb")
+	}
+	defer db.Close()
+
+	iter := db.NewIterator(util.BytesPrefix(key), nil)
+
+	out := ""
+	for iter.Next() {
+		out = out + string(iter.Key()) + ": " + string(iter.Value()) + "\n"
+	}
+	iter.Release()
+	if err != nil {
+		return "", false, fmt.Errorf("can't marshal data")
+	}
+
+	return string(out), true, iter.Error()
 }
