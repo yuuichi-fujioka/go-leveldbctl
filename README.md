@@ -70,3 +70,11 @@ c83961bf6783a691fb8f5f6887120000000000000000009f413c1df7e296
 8e1417baf3db320a
 ```
 
+Search for a key / value using a key prefix:
+
+```sh
+$ leveldbctl --dbdir=testdb s foo
+foo: bar
+foo2: bar2
+foo3: bar3
+```

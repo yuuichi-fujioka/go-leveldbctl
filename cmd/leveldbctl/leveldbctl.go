@@ -157,6 +157,34 @@ func main() {
 				return nil
 			},
 		},
+		{
+			Name:      "search",
+			Aliases:   []string{"s"},
+			Usage:     "Search key prefix from a LevelDB",
+			ArgsUsage: "key",
+			Action: func(c *cli.Context) error {
+				if c.NArg() != 1 {
+					if c.NArg() < 1 {
+						fmt.Println("[ERROR] key is required.")
+					}
+					if c.NArg() > 1 {
+						fmt.Println("[ERROR] Many arguments are passed.")
+					}
+					return cli.ShowSubcommandHelp(c)
+				}
+				key, _ := kvfmt(c.GlobalBool("xk"), c.Args()[0])
+				value, ok, err := leveldbctl.Search(c.GlobalString("dbdir"), key)
+				if err != nil {
+					return err
+				}
+				if !ok {
+					return cli.NewExitError(fmt.Sprintf("%v is not found.\n", key), 1)
+				}
+
+				fmt.Println(value)
+				return nil
+			},
+		},
 	}
 
 	err := app.Run(os.Args)
